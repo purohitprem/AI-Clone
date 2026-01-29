@@ -1,4 +1,8 @@
 let currentChatId = null;
+let audioContext;
+let analyser;
+let micStream;
+let waveInterval;
 
 /* ================= ELEMENTS ================= */
 const chatBox = document.getElementById("chat-box");
@@ -257,21 +261,22 @@ function startMic() {
 
         const transcript = event.results[0][0].transcript;
 
-        document.getElementById("user-input").value = transcript;
-
         overlay.classList.add("hidden");
 
+        stopWaveAnimation();  
         // ⭐ DIRECT VOICE SEND
             sendVoiceMessage(transcript);
     };
 
     recognition.onerror = () => {
+        stopWaveAnimation();  
         overlay.classList.add("hidden");
     };
 
     // 🔥 Auto stop after 10 sec
     setTimeout(() => {
         try { recognition.stop(); } catch {}
+        stopWaveAnimation();  
         overlay.classList.add("hidden");
     }, 10000);
 }
@@ -310,3 +315,95 @@ async function downloadPDF() {
 }
 
 window.downloadPDF = downloadPDF;
+function downloadPDF() {
+
+    if (!currentChatId) {
+        alert("No chat selected");
+        return;
+    }
+
+    const link = document.createElement("a");
+    link.href = `/chat/export/pdf/${currentChatId}`;
+    link.download = `chat_${currentChatId}.pdf`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+/*------------------EXPORT PDF----------------- */
+
+async function exportChatPDF() {
+
+    if (!currentChatId) {
+        alert("No chat selected");
+        return;
+    }
+
+    showPdfLoader(); // loading UI
+
+    try {
+
+        const res = await fetch(`/chat/export/pdf/${currentChatId}`);
+
+        if (!res.ok) throw new Error("PDF failed");
+
+        const blob = await res.blob();
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `PremAI_Chat_${currentChatId}.pdf`;
+
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
+
+    } catch (err) {
+        console.error(err);
+        alert("PDF export failed");
+    }
+
+    hidePdfLoader();
+}
+
+function showPdfLoader() {
+    document.getElementById("pdfLoader").classList.remove("hidden");
+}
+
+function hidePdfLoader() {
+    document.getElementById("pdfLoader").classList.add("hidden");
+}
+
+function startWaveAnimation(){
+
+    const core = document.querySelector(".mic-core");
+
+    waveInterval = setInterval(()=>{
+
+        analyser.getByteFrequencyData(dataArray);
+
+        let volume = dataArray.reduce((a,b)=>a+b)/dataArray.length;
+
+        let scale = 1 + volume / 200;
+
+        core.style.transform = `scale(${scale})`;
+
+    },60);
+
+}
+
+function stopWaveAnimation(){
+
+    if(waveInterval) clearInterval(waveInterval);
+
+    document.querySelector(".mic-core").style.transform = "scale(1)";
+
+    if(micStream){
+        micStream.getTracks().forEach(track=>track.stop());
+    }
+
+}

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify, render_template, send_file
 from app.services.assistant_engine import process_user_message
 from app.services.voice_service import text_to_speech
 from datetime import datetime
@@ -147,7 +147,6 @@ def export_chat_pdf(chat_id):
 
     try:
 
-        # 🔥 Get messages from Supabase
         res = supabase.table("messages") \
             .select("*") \
             .eq("chat_id", chat_id) \
@@ -156,13 +155,14 @@ def export_chat_pdf(chat_id):
 
         messages = res.data or []
 
-        # 🔥 Generate PDF
         pdf_path = generate_chat_pdf(chat_id, messages)
 
-        return jsonify({
-            "success": True,
-            "pdf_url": "/" + pdf_path.replace("\\", "/")
-        })
+        # ✅ DIRECT DOWNLOAD (LOCAL SAVE OPTION)
+        return send_file(
+            pdf_path,
+            as_attachment=True,
+            download_name=f"chat_{chat_id}.pdf"
+        )
 
     except Exception as e:
         print("PDF ERROR:", e)
