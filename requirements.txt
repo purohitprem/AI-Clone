@@ -1,0 +1,10 @@
+Flask
+SpeechRecognition
+PyAudio
+gTTS
+pygame
+google-genai
+python-dotenv
+edge-tts
+supabase
+reportlab

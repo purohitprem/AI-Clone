@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Prem AI Clone{% endblock %}
+
+{% block content %}
+<div class="flex h-screen">
+
+    <!-- SIDEBAR -->
+    <div class="w-64 bg-white border-r p-4">
+        <h2 class="font-bold text-lg mb-4">Chats</h2>
+
+        <button onclick="createNewChat()"
+                class="w-full bg-blue-500 text-white py-2 rounded mb-4">
+            + New Chat
+        </button>
+
+        <div id="chat-list" class="space-y-2"></div>
+    </div>
+
+    <!-- CHAT AREA -->
+    <div class="flex-1 flex flex-col">
+        <!-- HEADER -->
+        <div class="bg-white border-b p-4 flex justify-between">
+            <h1 class="font-semibold">Prem AI Clone</h1>
+        </div>
+        <button onclick="downloadPDF()"
+          class="bg-red-500 text-white px-4 py-2 rounded-lg">
+          PDF
+        </button>
+        <!-- MESSAGES -->
+        <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50"></div>
+
+        <!-- INPUT -->
+        <div class="bg-white p-4 flex gap-2">
+            <input id="user-input"
+                   type="text"
+                   placeholder="Type here..."
+                   class="flex-1 border rounded px-3 py-2"
+                   onkeydown="handleEnter(event)">
+            <button onclick="startMic()"
+              class="bg-gradient-to-r from-purple-500 to-indigo-500
+                    hover:scale-105 transition
+                    text-white p-3 rounded-xl shadow-lg"
+                    >
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 640 640"
+                class="w-5 h-5 fill-current">
+
+                <path d="M320 64C267 64 224 107 224 160L224 288C224 341 267 384 320 384C373 384 416 341 416 288L416 160C416 107 373 64 320 64zM176 248C176 234.7 165.3 224 152 224C138.7 224 128 234.7 128 248L128 288C128 385.9 201.3 466.7 296 478.5L296 528L248 528C234.7 528 224 538.7 224 552C224 565.3 234.7 576 248 576L392 576C405.3 576 416 565.3 416 552C416 538.7 405.3 528 392 528L344 528L344 478.5C438.7 466.7 512 385.9 512 288L512 248C512 234.7 501.3 224 488 224C474.7 224 464 234.7 464 248L464 288C464 367.5 399.5 432 320 432C240.5 432 176 367.5 176 288L176 248z"/>
+                </svg>
+
+            </button>
+            <button onclick="sendMessage()"
+                    class="bg-blue-500 text-white px-4 rounded">
+                Send
+            </button>
+        </div>
+    </div>
+  <!-- MIC OVERLAY -->
+  <div id="micOverlay"
+  class="hidden fixed inset-0 bg-white/80 backdrop-blur flex items-center justify-center z-50">
+
+      <div class="text-center">
+
+          <div class="text-7xl animate-pulse"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M320 64C267 64 224 107 224 160L224 288C224 341 267 384 320 384C373 384 416 341 416 288L416 160C416 107 373 64 320 64zM176 248C176 234.7 165.3 224 152 224C138.7 224 128 234.7 128 248L128 288C128 385.9 201.3 466.7 296 478.5L296 528L248 528C234.7 528 224 538.7 224 552C224 565.3 234.7 576 248 576L392 576C405.3 576 416 565.3 416 552C416 538.7 405.3 528 392 528L344 528L344 478.5C438.7 466.7 512 385.9 512 288L512 248C512 234.7 501.3 224 488 224C474.7 224 464 234.7 464 248L464 288C464 367.5 399.5 432 320 432C240.5 432 176 367.5 176 288L176 248z"/></svg></div>
+
+          <p class="mt-6 text-gray-600 text-lg">
+              Listening...
+          </p>
+
+          <p class="text-sm text-gray-400 mt-2">
+              Speak now
+          </p>
+
+      </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}
