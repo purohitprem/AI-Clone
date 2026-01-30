@@ -1,23 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Prem AI Clone{% endblock %}</title>
 
-    <!-- Tailwind CDN -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              primary: "#2563eb",
+              darkbg: "#0f172a",
+            },
+            boxShadow: {
+              glow: "0 0 20px rgba(37,99,235,.35)"
+            }
+          }
+        }
+      }
+    </script>
+
     <style>
-        .wave-bar{
-    width:4px;
-    height:10px;
-    background: linear-gradient(to top,#7c3aed,#3b82f6);
-    border-radius:3px;
-    transition: height 0.1s linear;
-}
+        body {
+            font-family: Inter, sans-serif;
+        }
+
+        .glass {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .dark .glass {
+            background: rgba(15,23,42,0.75);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
-<body class="bg-gray-100 h-screen">
+<body class="bg-slate-100 text-slate-900 dark:bg-darkbg dark:text-slate-100 transition-colors duration-300 h-screen overflow-hidden">
     {% block content %}{% endblock %}
 </body>
 </html>

@@ -11,7 +11,7 @@ async def generate_voice(text):
 
     communicate = edge_tts.Communicate(
         text=text,
-        voice="hi-IN-SwaraNeural"
+        voice="hi-IN-MadhurNeural"
     )
 
     await communicate.save(file_path)

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Prem AI Premium{% endblock %}
+
+{% block content %}
+
+<style>
+body{
+    background: linear-gradient(135deg,#f0f9ff,#ffffff);
+}
+
+.glass{
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.65);
+    border: 1px solid rgba(255,255,255,0.4);
+}
+
+.mic-glow{
+    animation: micGlow 2s infinite;
+}
+
+@keyframes micGlow{
+    0%{ box-shadow:0 0 0 0 rgba(56,189,248,.6); }
+    70%{ box-shadow:0 0 0 20px rgba(56,189,248,0); }
+    100%{ box-shadow:0 0 0 0 rgba(56,189,248,0); }
+}
+</style>
+
+<div class="h-screen flex overflow-hidden font-sans">
+
+<!-- SIDEBAR -->
+<aside id="sidebar"
+class="fixed md:relative z-40 w-72 h-full
+glass shadow-xl p-6
+transform -translate-x-full md:translate-x-0
+transition">
+
+<h2 class="font-bold text-xl text-sky-700 mb-6">
+Chat History
+</h2>
+
+<button onclick="createNewChat()"
+class="w-full py-3 rounded-xl
+bg-gradient-to-r from-sky-500 to-cyan-400
+text-white shadow-lg hover:scale-105 transition">
++ New Chat
+</button>
+
+<div id="chat-list"
+class="mt-6 space-y-3 overflow-y-auto"></div>
+
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 flex flex-col">
+
+<!-- HEADER -->
+<header class="h-20 glass flex justify-between items-center px-6">
+
+<div class="flex items-center gap-3">
+<button onclick="toggleSidebar()" class="md:hidden text-xl">☰</button>
+<h1 class="font-bold text-sky-700">Prem AI Premium</h1>
+</div>
+
+<button onclick="exportChatPDF()"
+class="px-5 py-2 rounded-xl
+bg-gradient-to-r from-sky-500 to-cyan-400
+text-white shadow-lg hover:scale-105 transition">
+📄 Export PDF
+</button>
+
+</header>
+
+<!-- CHAT -->
+<div id="chat-box"
+class="flex-1 overflow-y-auto p-6 space-y-6 max-w-5xl mx-auto w-full"></div>
+
+<!-- INPUT -->
+<div class="p-6">
+
+<div class="glass rounded-2xl p-3 flex items-center gap-3 shadow-xl">
+
+<input id="user-input"
+type="text"
+placeholder="Message Prem AI..."
+class="flex-1 bg-transparent outline-none"
+onkeydown="handleEnter(event)">
+
+<!-- MIC -->
+<button onclick="startMic()"
+class="w-12 h-12 rounded-xl bg-white shadow flex items-center justify-center mic-glow">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+class="w-6 h-6 text-sky-500"
+fill="currentColor"
+viewBox="0 0 24 24">
+
+<path d="M12 14a3 3 0 003-3V5a3 3 0 10-6 0v6a3 3 0 003 3z"/>
+<path d="M19 11a7 7 0 01-14 0H3a9 9 0 0018 0h-2z"/>
+<path d="M11 21h2v-3h-2v3z"/>
+
+</svg>
+
+</button>
+
+<!-- SEND -->
+<button onclick="sendMessage()"
+class="w-12 h-12 rounded-xl
+bg-gradient-to-r from-sky-500 to-cyan-400
+text-white shadow-lg hover:scale-105 transition">
+
+➤
+
+</button>
+
+</div>
+
+</div>
+
+</main>
+</div>
+
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+
+{% endblock %}

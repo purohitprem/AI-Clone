@@ -67,6 +67,7 @@ async function createNewChat() {
     chatBox.innerHTML = "";
 
     loadChats();
+    if (window.innerWidth < 768) closeSidebar();
 }
 
 /* ---------------- OPEN CHAT ---------------- */
@@ -83,6 +84,11 @@ async function openChat(chatId) {
         if (msg.sender === "user") addUserMsg(msg.content);
         if (msg.sender === "bot") addAiMsg(msg.content);
     });
+
+    // ⭐ MOBILE AUTO CLOSE SIDEBAR
+    if (window.innerWidth < 768) {
+        closeSidebar();
+    }
 }
 
 /* ---------------- SEND MESSAGE ---------------- */
@@ -245,14 +251,14 @@ function startMic() {
         window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-        alert("Mic not supported in this browser");
+        alert("Mic not supported");
         overlay.classList.add("hidden");
         return;
     }
 
     const recognition = new SpeechRecognition();
 
-    recognition.lang = "en-IN";   // Hindi English mix works
+    recognition.lang = "en-IN";
     recognition.interimResults = false;
 
     recognition.start();
@@ -263,20 +269,22 @@ function startMic() {
 
         overlay.classList.add("hidden");
 
-        stopWaveAnimation();  
-        // ⭐ DIRECT VOICE SEND
+        console.log("VOICE TEXT:", transcript);
+
+        // ⭐ CRITICAL LINE
+        if (typeof sendVoiceMessage === "function") {
             sendVoiceMessage(transcript);
+        } else {
+            console.error("sendVoiceMessage not found");
+        }
     };
 
     recognition.onerror = () => {
-        stopWaveAnimation();  
         overlay.classList.add("hidden");
     };
 
-    // 🔥 Auto stop after 10 sec
     setTimeout(() => {
         try { recognition.stop(); } catch {}
-        stopWaveAnimation();  
         overlay.classList.add("hidden");
     }, 10000);
 }
@@ -406,4 +414,14 @@ function stopWaveAnimation(){
         micStream.getTracks().forEach(track=>track.stop());
     }
 
+}
+
+function toggleSidebar(){
+    document.getElementById("sidebar").classList.toggle("-translate-x-full");
+    document.getElementById("sidebarOverlay").classList.toggle("hidden");
+}
+
+function closeSidebar(){
+    document.getElementById("sidebar").classList.add("-translate-x-full");
+    document.getElementById("sidebarOverlay").classList.add("hidden");
 }
