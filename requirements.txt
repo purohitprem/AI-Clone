@@ -1,6 +1,5 @@
 Flask
 SpeechRecognition
-PyAudio
 gTTS
 pygame
 google-genai
