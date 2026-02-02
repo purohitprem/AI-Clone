@@ -5,43 +5,6 @@
 <!-- MAIN WRAPPER -->
 <div class="flex h-screen overflow-hidden relative">
 
-    <!-- SIDEBAR -->
-    <aside id="sidebar"
-    class="md:fixed md:relative
-    top-0 left-0
-    z-50
-    w-72 md:w-80
-    h-full
-    glass
-    border-r border-slate-200 dark:border-slate-800
-    flex flex-col
-    -translate-x-full md:translate-x-0
-    transition-all duration-300 ease-in-out">
-
-        <div class="p-6">
-            <div class="flex items-center gap-3 mb-6">
-                <span class="w-2 h-8 bg-primary rounded-full shadow-glow"></span>
-                <h1 class="text-xl font-bold">Chat History</h1>
-            </div>
-
-            <button onclick="createNewChat()"
-            class="w-full py-3 bg-primary hover:bg-blue-700
-            text-white font-semibold rounded-xl
-            shadow-glow transition">
-                + New Chat
-            </button>
-        </div>
-
-        <div id="chat-list"
-        class="flex-1 overflow-y-auto px-4 space-y-2 pb-6">
-        </div>
-    </aside>
-
-    <!-- MOBILE OVERLAY -->
-    <div id="sidebarOverlay"
-    class="fixed inset-0 bg-black/40 z-40 hidden md:hidden"
-    onclick="closeSidebar()"></div>
-
     <!-- MAIN CHAT -->
     <main class="flex-1 flex flex-col bg-transparent">
 
@@ -51,11 +14,6 @@
         glass border-b border-slate-200 dark:border-slate-800">
 
             <div class="flex items-center gap-3">
-                <!-- MOBILE MENU -->
-                <button onclick="toggleSidebar()"
-                class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition">
-                    ☰
-                </button>
 
                 <h2 class="font-bold text-lg">Prem AI Clone</h2>
             </div>

@@ -15,6 +15,29 @@ chat_bp = Blueprint("chat", __name__)
 
 DEFAULT_USER_ID = os.getenv("DEFAULT_USER_ID", "local-user-001")
 
+def get_or_create_chat(user_id):
+    """
+    Returns latest chat id for user
+    Creates new chat if none exists
+    """
+
+    res = supabase.table("chats") \
+        .select("*") \
+        .eq("user_id", user_id) \
+        .order("created_at", desc=True) \
+        .limit(1) \
+        .execute()
+
+    if res.data:
+        return res.data[0]["id"]
+
+    new_chat = supabase.table("chats").insert({
+        "user_id": user_id,
+        "title": "New Chat"
+    }).execute()
+
+    return new_chat.data[0]["id"]
+
 @chat_bp.route("/")
 def index():
     return render_template("index.html")
@@ -58,69 +81,77 @@ def get_messages(chat_id):
 # ---------------- SEND MESSAGE ----------------
 @chat_bp.route("/chat/send", methods=["POST"])
 def send_message():
-    
     try:
         data = request.json
 
-        chat_id = data.get("chat_id")
         message = data.get("message")
-        msg_type = data.get("type", "text") 
-        print("TYPE RECEIVED:", msg_type)  
-        if not chat_id or not message:
-            return jsonify({"error": "Invalid request"}), 400
+        msg_type = data.get("type", "text")
 
-        # ✅ 1️⃣ SAVE USER MESSAGE
+        if not message:
+            return jsonify({"error": "Message required"}), 400
+
+        user_id = DEFAULT_USER_ID
+
+        # 🔑 GET OR CREATE CHAT
+        chat_id = get_or_create_chat(user_id)
+
+        # ✅ SAVE USER MESSAGE
         supabase.table("messages").insert({
             "chat_id": chat_id,
             "sender": "user",
             "content": message
         }).execute()
 
-        # ✅ 2️⃣ COUNT ONLY USER MESSAGES
+        # 🔢 COUNT USER MSGS
         user_msgs = supabase.table("messages") \
             .select("id") \
             .eq("chat_id", chat_id) \
             .eq("sender", "user") \
             .execute()
 
-        # ✅ 3️⃣ FIRST MESSAGE → UPDATE TITLE
+        # 📝 FIRST MSG → UPDATE TITLE
         if len(user_msgs.data) == 1:
-
             title = " ".join(message.split()[:5])
-
             supabase.table("chats").update({
                 "title": title
             }).eq("id", chat_id).execute()
 
-        # ✅ 4️⃣ AI REPLY
+        # 🤖 AI RESPONSE
         ai_reply = process_user_message(message)
 
-        # ⭐ VOICE GENERATE ONLY IF VOICE MODE
+        audio_file = None
         audio_url = None
 
-        if msg_type == "voice":
-            print("Generating Voice...")
-            audio_url = text_to_speech(ai_reply)
 
-        # ✅ 5️⃣ SAVE BOT MESSAGE
+        # 🔊 VOICE (optional)
+        if msg_type == "voice":
+            try:
+                audio_file = text_to_speech(ai_reply)
+
+                if audio_file:
+                    audio_url = f"/audio/{os.path.basename(audio_file)}"
+                else:
+                    audio_url = None
+            
+            except Exception as e:
+                print("TTS FAILED:", e)
+                audio_url = None
+        
+        # ✅ SAVE AI MESSAGE
         supabase.table("messages").insert({
             "chat_id": chat_id,
             "sender": "bot",
             "content": ai_reply
         }).execute()
 
-        # ⭐ RETURN AUDIO ALSO
         return jsonify({
             "reply": ai_reply,
             "audio": audio_url
         })
-        
 
-    except Exception as e:
-        import traceback
+    except Exception:
         traceback.print_exc()
-        return jsonify({"reply": "Error occurred"})
-    
+        return jsonify({"reply": "Internal error"}), 500
 
 # ---------------------DELETE ROUTE---------------------
 
@@ -142,10 +173,12 @@ def delete_chat(chat_id):
 
 # -------------------PDF-------------------
 
-@chat_bp.route("/chat/export/pdf/<chat_id>")
-def export_chat_pdf(chat_id):
+@chat_bp.route("/chat/export/pdf")
+def export_chat_pdf():
 
     try:
+        user_id = DEFAULT_USER_ID
+        chat_id = get_or_create_chat(user_id)
 
         res = supabase.table("messages") \
             .select("*") \
@@ -157,13 +190,12 @@ def export_chat_pdf(chat_id):
 
         pdf_path = generate_chat_pdf(chat_id, messages)
 
-        # ✅ DIRECT DOWNLOAD (LOCAL SAVE OPTION)
         return send_file(
             pdf_path,
             as_attachment=True,
-            download_name=f"chat_{chat_id}.pdf"
+            download_name="PremAI_Chat.pdf"
         )
 
     except Exception as e:
-        print("PDF ERROR:", e)
-        return jsonify({"success": False})
+        traceback.print_exc()
+        return jsonify({"success": False}), 500
