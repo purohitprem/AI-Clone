@@ -148,10 +148,17 @@ def send_message():
             "reply": ai_reply,
             "audio": audio_url
         })
-
-    except Exception:
+    except Exception as e:
         traceback.print_exc()
-        return jsonify({"reply": "Internal error"}), 500
+
+        friendly_msg = (
+            "Please Try After Sometime\n\n"
+            "Thank you for your patience"
+        )
+
+    return jsonify({
+        "reply": friendly_msg
+    })
 
 # ---------------------DELETE ROUTE---------------------
 

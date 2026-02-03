@@ -1,5 +1,15 @@
 /* ================= ELEMENTS ================= */
 const chatBox = document.getElementById("chat-box");
+let currentChatId = null;
+
+function exportChatPDF() {
+    if (!currentChatId) {
+        alert("No chat selected");
+        return;
+    }
+
+    window.location.href = `/chat/export/pdf/${currentChatId}`;
+}
 
 /* ================= SEND MESSAGE ================= */
 async function sendMessage() {
@@ -32,7 +42,9 @@ async function sendMessage() {
 
         if (data.audio) {
             const audio = new Audio(data.audio);
-            audio.play().catch(() => {});
+            audio.play().catch(() => {
+                console.log("Audio blocked:", err);
+            });
         }
 
     } catch (err) {
@@ -41,6 +53,22 @@ async function sendMessage() {
         addAiMsg("⚠️ AI error occurred.");
     }
 }
+
+function showPlayVoiceButton(audioUrl) {
+    const btn = document.createElement("button");
+    btn.innerText = "🔊 Play Voice";
+    btn.className = "mt-2 text-sm text-blue-600 underline";
+
+    btn.onclick = () => {
+        const a = new Audio(audioUrl);
+        a.play();
+        btn.remove();
+    };
+
+    chatBox.appendChild(btn);
+    scrollBottom();
+}
+
 
 /* ================= VOICE MESSAGE ================= */
 async function sendVoiceMessage(text) {
@@ -62,6 +90,7 @@ async function sendVoiceMessage(text) {
 
     removeThinking();
     addAiMsg(data.reply || "");
+    speakText(data.reply);
     scrollBottom();
 
     if (data.audio) {
@@ -146,28 +175,34 @@ function startMic() {
 
 /* ================= EXPORT PDF ================= */
 async function exportChatPDF() {
-
     showPdfLoader();
 
     try {
         const res = await fetch("/chat/export/pdf");
+        const data = await res.json();
 
-        if (!res.ok) throw new Error("PDF failed");
+        if (!data.success || !data.pdf_url) {
+            throw new Error("PDF generation failed");
+        }
 
-        const blob = await res.blob();
+        // 🔽 FORCE LOCAL DOWNLOAD
+        const response = await fetch(data.pdf_url);
+        const blob = await response.blob();
+
         const url = window.URL.createObjectURL(blob);
-
         const a = document.createElement("a");
+
         a.href = url;
-        a.download = "PremAI_Chat.pdf";
+        a.download = "PremAI_Chat.pdf"; // 👈 filename
         document.body.appendChild(a);
         a.click();
-        a.remove();
 
+        document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
 
-    } catch {
-        alert("PDF export failed");
+    } catch (err) {
+        console.error(err);
+        alert("PDF download failed");
     }
 
     hidePdfLoader();
@@ -181,9 +216,26 @@ function hidePdfLoader() {
     document.getElementById("pdfLoader").classList.add("hidden");
 }
 
+function speakText(text) {
+    if (!("speechSynthesis" in window)) {
+        alert("Voice not supported in this browser");
+        return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-IN"; // or en-US
+    utterance.rate = 1;
+    utterance.pitch = 1;
+
+    window.speechSynthesis.speak(utterance);
+}
+
+
 /* ================= GLOBAL ================= */
 window.sendMessage = sendMessage;
 window.handleEnter = handleEnter;
 window.startMic = startMic;
 window.sendVoiceMessage = sendVoiceMessage;
 window.exportChatPDF = exportChatPDF;
+
+
