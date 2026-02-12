@@ -2,6 +2,7 @@
 <html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{% block title %}Prem AI Clone{% endblock %}</title>
 
     <!-- Tailwind -->
@@ -30,9 +31,48 @@
       }
     </script>
 
+    <script>
+      (function () {
+        const setAppHeight = () => {
+          const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+          document.documentElement.style.setProperty("--app-height", `${Math.round(viewportHeight)}px`);
+        };
+
+        const scheduleSetAppHeight = () => window.setTimeout(setAppHeight, 50);
+
+        setAppHeight();
+        window.addEventListener("resize", scheduleSetAppHeight);
+        window.addEventListener("orientationchange", scheduleSetAppHeight);
+        window.addEventListener("pageshow", scheduleSetAppHeight);
+        window.addEventListener("focusin", scheduleSetAppHeight);
+        window.addEventListener("focusout", scheduleSetAppHeight);
+
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener("resize", scheduleSetAppHeight);
+          window.visualViewport.addEventListener("scroll", scheduleSetAppHeight);
+        }
+      })();
+    </script>
+
     <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: Inter, sans-serif;
+        }
+
+        .app-shell {
+            height: var(--app-height, 100vh);
+            max-height: var(--app-height, 100vh);
+            width: 100%;
+        }
+
+        .safe-bottom {
+            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
         }
 
         .glass {
@@ -56,7 +96,7 @@
     </style>
 </head>
 
-<body class="bg-slate-100 text-slate-900 dark:bg-darkbg dark:text-slate-100 transition-colors duration-300 h-screen overflow-hidden">
+<body class="bg-slate-100 text-slate-900 dark:bg-darkbg dark:text-slate-100 transition-colors duration-300 overflow-hidden">
     {% block content %}{% endblock %}
 </body>
 </html>

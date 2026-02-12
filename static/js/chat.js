@@ -107,7 +107,7 @@ function handleEnter(e) {
 function addUserMsg(text) {
     chatBox.innerHTML += `
     <div class="flex justify-end mb-2">
-        <div class="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs">
+        <div class="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-[85%] sm:max-w-xs break-words">
             ${text}
         </div>
     </div>`;
@@ -116,7 +116,7 @@ function addUserMsg(text) {
 function addAiMsg(text) {
     chatBox.innerHTML += `
     <div class="flex justify-start mb-2">
-        <div class="bg-gray-200 dark:bg-slate-800 px-4 py-2 rounded-lg max-w-md">
+        <div class="bg-gray-200 dark:bg-slate-800 px-4 py-2 rounded-lg max-w-[92%] sm:max-w-md break-words">
             ${text}
         </div>
     </div>`;

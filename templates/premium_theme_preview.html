@@ -25,11 +25,11 @@ body{
 }
 </style>
 
-<div class="h-screen flex overflow-hidden font-sans">
+<div class="app-shell flex overflow-hidden font-sans">
 
 <!-- SIDEBAR -->
 <aside id="sidebar"
-class="fixed md:relative z-40 w-72 h-full
+class="fixed md:relative z-40 w-[82vw] max-w-72 h-full
 glass shadow-xl p-6
 transform -translate-x-full md:translate-x-0
 transition">
@@ -51,18 +51,18 @@ class="mt-6 space-y-3 overflow-y-auto"></div>
 </aside>
 
 <!-- MAIN -->
-<main class="flex-1 flex flex-col">
+<main class="flex-1 min-h-0 w-full flex flex-col">
 
 <!-- HEADER -->
-<header class="h-20 glass flex justify-between items-center px-6">
+<header class="shrink-0 h-16 md:h-20 glass flex justify-between items-center px-3 sm:px-4 md:px-6 gap-3">
 
 <div class="flex items-center gap-3">
 <button onclick="toggleSidebar()" class="md:hidden text-xl">☰</button>
-<h1 class="font-bold text-sky-700">Prem AI Premium</h1>
+<h1 class="font-bold text-sky-700 text-sm sm:text-base md:text-lg truncate">Prem AI Premium</h1>
 </div>
 
 <button onclick="exportChatPDF()"
-class="px-5 py-2 rounded-xl
+class="px-3 sm:px-4 md:px-5 py-2 rounded-xl text-xs sm:text-sm md:text-base whitespace-nowrap
 bg-gradient-to-r from-sky-500 to-cyan-400
 text-white shadow-lg hover:scale-105 transition">
 📄 Export PDF
@@ -72,22 +72,22 @@ text-white shadow-lg hover:scale-105 transition">
 
 <!-- CHAT -->
 <div id="chat-box"
-class="flex-1 overflow-y-auto p-6 space-y-6 max-w-5xl mx-auto w-full"></div>
+class="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 max-w-5xl mx-auto w-full"></div>
 
 <!-- INPUT -->
-<div class="p-6">
+<div class="safe-bottom shrink-0 p-3 sm:p-4 md:p-6">
 
-<div class="glass rounded-2xl p-3 flex items-center gap-3 shadow-xl">
+<div class="glass rounded-2xl p-2.5 sm:p-3 flex items-center gap-2 sm:gap-3 shadow-xl">
 
 <input id="user-input"
 type="text"
 placeholder="Message Prem AI..."
-class="flex-1 bg-transparent outline-none"
+class="flex-1 min-w-0 bg-transparent outline-none text-sm sm:text-base"
 onkeydown="handleEnter(event)">
 
 <!-- MIC -->
 <button onclick="startMic()"
-class="w-12 h-12 rounded-xl bg-white shadow flex items-center justify-center mic-glow">
+class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white shadow flex items-center justify-center mic-glow shrink-0">
 
 <svg xmlns="http://www.w3.org/2000/svg"
 class="w-6 h-6 text-sky-500"
@@ -104,7 +104,7 @@ viewBox="0 0 24 24">
 
 <!-- SEND -->
 <button onclick="sendMessage()"
-class="w-12 h-12 rounded-xl
+class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl shrink-0
 bg-gradient-to-r from-sky-500 to-cyan-400
 text-white shadow-lg hover:scale-105 transition">
 

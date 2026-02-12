@@ -3,17 +3,17 @@
 {% block content %}
 
 <!-- MAIN WRAPPER -->
-<div class="flex h-screen overflow-hidden relative">
+<div class="app-shell flex overflow-hidden relative">
 
     <!-- MAIN CHAT -->
-    <main class="flex-1 flex flex-col bg-transparent">
+    <main class="flex-1 min-h-0 w-full flex flex-col bg-transparent">
 
         <!-- HEADER -->
-        <header class="h-20 relative flex items-center
-            px-4 md:px-8
+        <header class="shrink-0 h-16 md:h-20 relative flex items-center
+            px-3 sm:px-4 md:px-8
             glass border-b border-slate-200 dark:border-slate-800">
 
-                <h2 class="absolute left-1/2 -translate-x-1/2 text-lg font-bold
+                <h2 class="absolute left-1/2 -translate-x-1/2 text-base sm:text-lg font-bold
 bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
                     Prem AI Clone
                 </h2>
@@ -21,15 +21,15 @@ bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
 
         <!-- CHAT AREA -->
         <div id="chat-box"
-            class="flex-1 overflow-y-auto
-            p-4 md:p-8
-            space-y-6
+            class="flex-1 min-h-0 overflow-y-auto
+            p-3 sm:p-4 md:p-8
+            space-y-4 sm:space-y-6
             max-w-5xl mx-auto w-full
             relative z-10">
         </div>
 
         <!-- INPUT -->
-        <div class="p-4 md:p-6 border-t border-slate-200 dark:border-slate-800 glass">
+        <div class="safe-bottom shrink-0 p-3 sm:p-4 md:p-6 border-t border-slate-200 dark:border-slate-800 glass">
 
             <div class="max-w-4xl mx-auto relative">
 
@@ -42,19 +42,19 @@ bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
                     <input id="user-input"
                     type="text"
                     placeholder="Message Prem AI..."
-                    class="relative z-10 flex-1 bg-transparent px-4 py-3
+                    class="relative z-10 flex-1 min-w-0 bg-transparent px-3 sm:px-4 py-2.5 sm:py-3
                     border-none focus:ring-0
-                    text-slate-800 dark:text-slate-100"
+                    text-sm sm:text-base text-slate-800 dark:text-slate-100"
                     onkeydown="handleEnter(event)">
 
                     <button onclick="startMic()"
-                    class="w-11 h-11 flex items-center justify-center
+                    class="w-10 h-10 sm:w-11 sm:h-11 shrink-0 flex items-center justify-center
                     text-slate-400 hover:text-primary transition">
                         🎤
                     </button>
 
                     <button onclick="sendMessage()"
-                    class="w-11 h-11 bg-primary text-white rounded-xl
+                    class="w-10 h-10 sm:w-11 sm:h-11 shrink-0 bg-primary text-white rounded-xl
                     shadow-glow hover:scale-105 transition">
                         ➤
                     </button>
@@ -70,12 +70,12 @@ bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
         class="hidden fixed inset-0 bg-black/30 backdrop-blur
         flex items-center justify-center z-[999]">
 
-        <div class="glass p-12 rounded-3xl shadow-xl text-center">
-            <div class="w-20 h-20 bg-primary rounded-full mx-auto
+        <div class="glass p-8 sm:p-12 rounded-3xl shadow-xl text-center mx-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-primary rounded-full mx-auto
             flex items-center justify-center shadow-glow animate-pulse">
                 🎤
             </div>
-            <p class="mt-4 font-semibold text-lg">Listening...</p>
+            <p class="mt-4 font-semibold text-base sm:text-lg">Listening...</p>
             <p class="text-slate-400 text-sm">Speak now</p>
         </div>
     </div>
