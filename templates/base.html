@@ -34,8 +34,13 @@
     <script>
       (function () {
         const setAppHeight = () => {
-          const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+          const hasVisualViewport = Boolean(window.visualViewport);
+          const viewportHeight = hasVisualViewport ? window.visualViewport.height : window.innerHeight;
+          const viewportTop = hasVisualViewport ? window.visualViewport.offsetTop : 0;
+          const keyboardOffset = Math.max(0, window.innerHeight - (viewportHeight + viewportTop));
+
           document.documentElement.style.setProperty("--app-height", `${Math.round(viewportHeight)}px`);
+          document.documentElement.style.setProperty("--kb-offset", `${Math.round(keyboardOffset)}px`);
         };
 
         const scheduleSetAppHeight = () => window.setTimeout(setAppHeight, 50);
@@ -73,6 +78,20 @@
 
         .safe-bottom {
             padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+        }
+
+        .input-dock {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: var(--kb-offset, 0px);
+            z-index: 30;
+        }
+
+        @media (min-width: 768px) {
+            .input-dock {
+                position: static;
+            }
         }
 
         .glass {

@@ -22,14 +22,14 @@ bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
         <!-- CHAT AREA -->
         <div id="chat-box"
             class="flex-1 min-h-0 overflow-y-auto
-            p-3 sm:p-4 md:p-8
+            p-3 sm:p-4 md:p-8 pb-28 sm:pb-32 md:pb-8
             space-y-4 sm:space-y-6
             max-w-5xl mx-auto w-full
             relative z-10">
         </div>
 
         <!-- INPUT -->
-        <div class="safe-bottom shrink-0 p-3 sm:p-4 md:p-6 border-t border-slate-200 dark:border-slate-800 glass">
+        <div class="input-dock safe-bottom shrink-0 p-3 sm:p-4 md:p-6 border-t border-slate-200 dark:border-slate-800 glass">
 
             <div class="max-w-4xl mx-auto relative">
 
@@ -37,7 +37,7 @@ bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
                 bg-gradient-to-r from-primary to-cyan-500
                 rounded-2xl blur opacity-20 pointer-events-none"></div>
 
-                <div class="relative z-20 glass rounded-2xl p-2 flex items-center gap-2">
+                <div class="fixed z-20 glass rounded-2xl p-2 flex items-center gap-2">
 
                     <input id="user-input"
                     type="text"
