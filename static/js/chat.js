@@ -230,6 +230,17 @@ function speakText(text) {
     window.speechSynthesis.speak(utterance);
 }
 
+function setVH() {
+    document.documentElement.style.setProperty(
+        '--vh',
+        `${window.innerHeight * 0.01}px`
+    );
+}
+
+setVH();
+window.addEventListener('resize', setVH);
+
+
 
 /* ================= GLOBAL ================= */
 window.sendMessage = sendMessage;

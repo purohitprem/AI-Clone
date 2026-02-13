@@ -2,8 +2,15 @@
 {% block title %}Prem AI Clone{% endblock %}
 {% block content %}
 
+<style>
+    html, body {
+    height: 100%;
+    overflow: hidden;
+}
+</style>
+
 <!-- MAIN WRAPPER -->
-<div class="app-shell flex overflow-hidden min-h-dvh relative">
+<div class="app-shell flex overflow-hidden h-[calc(var(--vh)*100)] relative">
 
     <!-- MAIN CHAT -->
     <main class="flex-1 min-h-0 w-full flex flex-col bg-transparent">
